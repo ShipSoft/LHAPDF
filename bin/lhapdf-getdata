@@ -63,7 +63,6 @@ def getPDFSetFile(baseurl, filename, outdir, download=True):
             return True
         except IOError:
             logging.error("Problem while writing PDF set to '%s'" % outpath)
-            out.close()
         except:
             logging.error("Problem downloading PDF set from '%s'" % url)
         return False
