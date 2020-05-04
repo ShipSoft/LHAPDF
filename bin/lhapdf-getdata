@@ -1,5 +1,6 @@
 #! /usr/bin/env python
 
+
 import os, sys, cmd, logging
 
 usage = """%prog [--main] [--all] [--repo=URL] [--dest=DEST] [--dryrun]
@@ -26,24 +27,25 @@ Examples:
 
 def getPDFSetList(url):
     logging.debug("Getting PDF file list from '%s'" % url)
-    import urllib2
+    import urllib.request, urllib.error, urllib.parse
     hreq = None
     rtn = []
     try:
-        hreq = urllib2.urlopen(url)
+        hreq = urllib.request.urlopen(url)
         pdflistpage = hreq.read()
         logging.debug(pdflistpage)
         hreq.close()
-        for line in pdflistpage.splitlines():
-         if line.find('img')>0: continue
-         if line.find('class="name"')<0:continue
-         i = line.find('title="')
-         j = i+len('title="')
-         k = line[j:].find('"')
-         if i<0 or k<0 : continue
-         rtn.append(line[j:j+k])
+        for bline in pdflistpage.splitlines():
+            line = str(bline)
+            if line.find('img')>0: continue
+            if line.find('class="name"')<0:continue
+            i = line.find('title="')
+            j = i+len('title="')
+            k = line[j:].find('"')
+            if i<0 or k<0 : continue
+            rtn.append(line[j:j+k])
         return rtn
-    except urllib2.URLError, e:
+    except urllib.error.URLError as e:
         logging.error("Problem downloading PDF file list from '%s'" % url)
         if hreq:
             hreq.close()
@@ -58,8 +60,8 @@ def getPDFSetFile(baseurl, filename, outdir, download=True):
     logging.info("Getting PDF set from '%s'" % url)
     if download:
         try:
-            import urllib
-            urllib.urlretrieve(url, outpath)
+            import urllib.request, urllib.parse, urllib.error
+            urllib.request.urlretrieve(url, outpath)
             return True
         except IOError:
             logging.error("Problem while writing PDF set to '%s'" % outpath)
@@ -122,7 +124,7 @@ if __name__ == '__main__':
     ## Just list the available PDF files
     if opts.LIST:
         for f in sorted(allpdffiles):
-            print f
+            print(f)
         sys.exit(0)
 
     logging.info("Getting sets from %s" % opts.URL)

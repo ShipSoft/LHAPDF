@@ -398,12 +398,12 @@ AC_DEFUN([AZ_PYTHON_VERSION_CHECK],
     then
         AC_MSG_CHECKING([whether $PYTHON version >= $1])
         AZ_PYTHON_RUN([
-import sys, string
+import sys
 # split strings by '.' and convert to numeric.  Append some zeros
-# because we need at least 4 digits for the hex conversion.
-minver = map(int, string.split('$1', '.')) + [[0, 0, 0]]
+# because we need atpy least 4 digits for the hex conversion.
+minver = list(map(int, str.split('2.3', '.'))) + list(map(int, str.split('0.0.0', '.')))
 minverhex = 0
-for i in xrange(0, 4): minverhex = (minverhex << 8) + minver[[i]]
+for i in range(0, 4): minverhex = (minverhex << 8) + minver[[i]] #xrange does not exist in python3, use range instead
 if sys.hexversion >= minverhex:
     sys.exit( 0 )
 else:
